@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using BookTableRazor.Modals;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,9 @@ namespace BookTableRazor.Pages.BookList
             _db = db;
         }
         public IEnumerable<Book> Books { get; set; }
+
+        [TempData] 
+        public string Message { get; set; }
         public async Task OnGet()
         {
             Books = await _db.Books.ToListAsync();
@@ -33,6 +37,8 @@ namespace BookTableRazor.Pages.BookList
 
             _db.Books.Remove(bookFromDb);
             await _db.SaveChangesAsync();
+
+            Message = "The book was deleted";
             return RedirectToPage("Index");
         }
     }
